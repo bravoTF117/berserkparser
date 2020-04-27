@@ -27,12 +27,15 @@ Then, to filter the right files, I suggest you head to the **Filters** and:
 Then you can run the Python script of your choice. You can either have the output written to the screen (_BerserkParser\_to\_screen.py_) or to a file (_BerserkParser\_to\_file.py_). 
 There are many problems in the JSON files that require formatting and flattening. The end result may even be not correctly shown when emojis and other icons are used.
 
-'''
+```
 python3 .\BerserkParser_to_file.py
-'''
+```
+
 or
-'''
+
+```
 python3 .\BerserkParser_to_screen.py
-'''
+```
+
 
 Paste the directory you copied before (or type it) and hit enter. The script will run for a few seconds.
