@@ -38,4 +38,4 @@ python3 .\BerserkParser_to_screen.py
 ```
 
 
-Paste the directory you copied before (or type it) and hit enter. The script will run for a few seconds.
+Paste the directory path you copied before (or type it) and hit enter. The script will run for a few seconds.
