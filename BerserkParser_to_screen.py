@@ -23,7 +23,7 @@ def main():
         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
 
     #init all the variables for the flatten JSON
-    user_birthday, user_twitter_id , user_location, user_youtube_channel_id, user_unique_id =([] for i in range(5))
+    user_birthday, user_location, user_youtube_channel_id, user_unique_id =([] for i in range(4))
     user_apple_account, user_city, user_province, user_signature, aweme_list_0_author_short_id, aweme_list_0_author_region, aweme_list_0_author_language=([] for i in range(7))
     aweme_list_0_author_video_icon_url_list, user_nickname,user_follower_count, user_uid, user_gender, user_following_count =([] for i in range(6))
     user_total_favorited, user_avatar_larger_url_list_0, user_youtube_channel_title,user_aweme_count,user_ins_id, user_signature_language =([] for i in range(6))
