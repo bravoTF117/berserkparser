@@ -1,8 +1,6 @@
 import os
 import json
 import flatten_json
-import codecs
-import datetime
 
 def main():
     print('-----------------------------------------------')
