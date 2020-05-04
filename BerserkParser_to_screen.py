@@ -1,8 +1,10 @@
 import os
 import json
 import flatten_json
+import datetime
 
 def main():
+    print()
     print('-----------------------------------------------')
     print('| BerserkParser: TikTok JSON parser by BTF117 |')
     print('-----------------------------------------------')
@@ -11,221 +13,239 @@ def main():
     print('. To collect these files, use a proxy and connect a smartphone/emulator to it.                                                                       .')
     print('. Export all the sessions with the string \'aweme/v1\' in the URL as JSON files.                                                                       .')
     print('. (For example, in Fiddler, File->Export->Selected Sessions->Raw Files)                                                                              .')
-    print('......................................................................................................................................................')
+    print('......................................................................................................................................................\n')
 
-    dirName=input('\nEnter the directory you want to parse (format: c:/directory1/directory2): ')
+    dirName=input('\nEnter the directory you want to parse: ')
         
-    # Get the list of all files in directory tree at given path
+    # Get the list of all the files in directory at given path
     listOfFiles = list()
     for (dirpath, dirnames, filenames) in os.walk(dirName):
         listOfFiles += [os.path.join(dirpath, file) for file in filenames]
 
-    #init all the variables for the flatten JSON
-    user_birthday, user_location, user_youtube_channel_id, user_unique_id, aweme_list_0_author_video_icon_url_list, user_nickname,user_follower_count, user_uid, user_gender, user_following_count, user_apple_account, user_city, user_province, user_signature, aweme_list_0_author_short_id, aweme_list_0_author_region, aweme_list_0_author_language,user_total_favorited, user_avatar_larger_url_list_0, user_youtube_channel_title,user_aweme_count,user_ins_id, user_signature_language,user_twitter_id, user_twitter_name, followersALL, followingsALL =([] for i in range(27))
+    # init variables/kw
+    search_list = ['user_unique_id', 'user_nickname', 'user_uid', 'aweme_list_0_author_short_id', 'user_birthday', 'user_city', 'user_province', 'user_location', 'aweme_list_0_author_region', 'user_gender', 'user_signature', 'user_signature_language', 'aweme_list_0_author_language', 'user_avatar_larger_url_list_0', 'aweme_list_0_author_video_icon_url_list', 'user_aweme_count', 'user_ins_id', 'user_twitter_id', 'user_twitter_name', 'user_youtube_channel_id', 'user_youtube_channel_title', 'user_apple_account', 'user_follower_count', 'user_following_count', 'user_total_favorited']
 
-    # start to work on the files    
+    ext_search_list = ['unique_id_modify_time', 'download_prompt_ts', 'region', 'region_of_residence', 'bind_phone', 'has_email', 'school_name', 'google_account', 'weibo_name']
+
+    video_search_list = ['aweme_id', 'create_time', 'desc', 'music_play_url_url_list_0', 'statistics_comment_count', 'statistics_digg_count', 'statistics_download_count', 'statistics_play_count', 'statistics_share_count', 'statistics_whatsapp_share_count', 'video_play_addr_url_list_0', 'video_download_addr_url_list_0']
+
+    user_unique_id=[]
+    extra_now_bingo=[]
+    extra_now_dict={}
+
+    #find lowest/highest extra_now (timestamp at the beginning of the JSON files)
     for elem in listOfFiles:
         if elem.endswith('.json'):
             with open(elem, encoding='utf-8-sig') as f:
-
-                #flatten the JSON files
-
                 datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('extra_now') is not None:
+                    extra_now_dict.update({elem:datastore.get('extra_now')})
+                else:
+                    continue                    
+    extra_now_min = min(extra_now_dict.values())
+    extra_now_max = max(extra_now_dict.values())
+    
+    #find/extract/print uniqueid for target
+    for item in search_list:
+        for elem in listOfFiles:
+            if elem.endswith('.json'):
+                with open(elem, encoding='utf-8-sig') as f:
+                    datastore=flatten_json.flatten(json.load(f))
+                    #find the file with the lowest extra_now to open the profile of the target and not the one visited later
+                    if datastore.get('extra_now') is not None and datastore.get('extra_now') == extra_now_min and datastore.get('user_unique_id') is not None:
+                        user_unique_id.append(datastore.get('user_unique_id'))
+    user_unique_id_set=(set(datastore.fromkeys(filter(None, (user_unique_id)))))
 
-                #use dict.get to find the relevant keys
+    print('\n** Profile for TikTok user ' + str(*user_unique_id_set) +':\n')
 
-                user_signature_language.append(datastore.get('user_signature_language'))
-                user_nickname.append(datastore.get('user_nickname'))
-                user_follower_count.append(datastore.get('user_follower_count'))
-                user_signature.append(datastore.get('user_signature'))
-                user_uid.append(datastore.get('user_uid'))
-                user_gender.append(datastore.get('user_gender'))
-                user_total_favorited.append(datastore.get('user_total_favorited'))
-                user_avatar_larger_url_list_0.append(datastore.get('user_avatar_larger_url_list_0'))
-                user_youtube_channel_title.append(datastore.get('user_youtube_channel_title'))
-                user_aweme_count.append(datastore.get('user_aweme_count'))
-                user_twitter_id.append(datastore.get('user_twitter_id'))
-                user_ins_id.append(datastore.get('user_ins_id'))
-                aweme_list_0_author_region.append(datastore.get('aweme_list_0_author_region'))
-                user_birthday.append(datastore.get('user_birthday'))
-                user_youtube_channel_id.append(datastore.get('user_youtube_channel_id'))
-                user_following_count.append(datastore.get('user_following_count'))
-                user_unique_id.append(datastore.get('user_unique_id'))
-                user_twitter_name.append(datastore.get('user_twitter_name'))
-                followersALL.append(datastore.get('followers_0_nickname'))
-                followersALL.append(datastore.get('followers_1_nickname'))
-                followersALL.append(datastore.get('followers_2_nickname'))
-                followersALL.append(datastore.get('followers_3_nickname'))
-                followersALL.append(datastore.get('followers_4_nickname'))
-                followersALL.append(datastore.get('followers_5_nickname'))
-                followersALL.append(datastore.get('followers_6_nickname'))
-                followersALL.append(datastore.get('followers_7_nickname'))
-                followersALL.append(datastore.get('followers_8_nickname'))
-                followersALL.append(datastore.get('followers_9_nickname'))
-                followersALL.append(datastore.get('followers_10_nickname'))
-                followersALL.append(datastore.get('followers_11_nickname'))
-                followersALL.append(datastore.get('followers_12_nickname'))
-                followersALL.append(datastore.get('followers_13_nickname'))
-                followersALL.append(datastore.get('followers_14_nickname'))
-                followersALL.append(datastore.get('followers_15_nickname'))
-                followersALL.append(datastore.get('followers_16_nickname'))
-                followersALL.append(datastore.get('followers_17_nickname'))
-                followersALL.append(datastore.get('followers_18_nickname'))
-                followersALL.append(datastore.get('followers_19_nickname'))
-                followingsALL.append(datastore.get('followings_0_nickname'))
-                followingsALL.append(datastore.get('followings_1_nickname'))
-                followingsALL.append(datastore.get('followings_2_nickname'))
-                followingsALL.append(datastore.get('followings_3_nickname'))
-                followingsALL.append(datastore.get('followings_4_nickname'))
-                followingsALL.append(datastore.get('followings_5_nickname'))
-                followingsALL.append(datastore.get('followings_6_nickname'))
-                followingsALL.append(datastore.get('followings_7_nickname'))
-                followingsALL.append(datastore.get('followings_8_nickname'))
-                followingsALL.append(datastore.get('followings_9_nickname'))
-                followingsALL.append(datastore.get('followings_10_nickname'))
-                followingsALL.append(datastore.get('followings_11_nickname'))
-                followingsALL.append(datastore.get('followings_12_nickname'))
-                followingsALL.append(datastore.get('followings_13_nickname'))
-                followingsALL.append(datastore.get('followings_14_nickname'))
-                followingsALL.append(datastore.get('followings_15_nickname'))
-                followingsALL.append(datastore.get('followings_16_nickname'))
-                followingsALL.append(datastore.get('followings_17_nickname'))
-                followingsALL.append(datastore.get('followings_18_nickname'))
-                followingsALL.append(datastore.get('followings_19_nickname'))
+    #find extra_now for follower's profile
+    for elem in listOfFiles:
+        if elem.endswith('.json'):
+            with open(elem, encoding='utf-8-sig') as f:
+                datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('user_unique_id') not in user_unique_id_set and datastore.get('user_unique_id') != None:
+                    extra_now_bingo.append(datastore.get('extra_now'))
+    extra_now_bingo = min(extra_now_bingo)
 
-    #print the keys to screen
-    print('--- START ---------------------------\n** BASIC INFORMATION **\n')
-    user_unique_id_set=set(user_unique_id)
-    user_unique_id_set=(list(filter(None,user_unique_id_set)))
-    print('Unique ID: ')
-    print(*user_unique_id_set)
-    print('\n')
+    #find/extract/print basic info from target profile by parsing JSON file with lowest extra_now
+    print('** Basic information:')
+    for item in search_list:
+        item_list=[]
+        for elem in listOfFiles:
+            if elem.endswith('.json'):
+                with open(elem, encoding='utf-8-sig') as f:
+                    datastore=flatten_json.flatten(json.load(f))
+                    if datastore.get('extra_now') is not None and datastore.get('extra_now') == extra_now_min:
+                        item_list.append(datastore.get(item))
+        item_p=(str(item.replace('_',' ')))
+        if item == 'aweme_list_0_author_short_id':
+            print()
+            print('Short ID:')
+        elif item == 'aweme_list_0_author_region':
+            print()
+            print('Author Region:')
+        elif item =='aweme_list_0_author_language':
+            print()
+            print('Author Region:')
+        elif item == 'user_avatar_larger_url_list_0':
+            print()
+            print('Larger Avatar URL:')
+        elif item == 'aweme_list_0_author_video_icon_url_list':
+            print()
+            print('Video Icon URL:')
+        elif item == 'user_aweme_count':
+            print()
+            print('Number of videos:')
+        elif item == 'user_ins_id':
+            print()
+            print('Instagram ID:')
+        else:
+            print('\n' + item_p.capitalize() +': ')
+        item_list=filter(None, (item_list))
+        print(*item_list)
 
-    user_nickname_set=set(user_nickname)
-    user_nickname_set=(list(filter(None,user_nickname_set)))
-    print('Nickname: ')
-    print(str(*user_nickname_set))
-    print('\n')
+    print('\n..............................................................................................................')
 
-    print("UID: ")
-    user_uid_set=set(user_uid)
-    user_uid_set=(list(filter(None,user_uid_set)))
-    print(*user_uid_set)
-    print('\n')
+    #find/extract/print extended information from followers_X
+    print('\n** Extended information found in metadata (following):')
+    for elem in listOfFiles:
+        if elem.endswith('.json'):
+            with open(elem, encoding='utf-8-sig') as f:
+                datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('extra_now') is not None and datastore.get('extra_now') > extra_now_bingo:
+                    for x in range(20):
+                        s=('followers_'+ str(x) +'_')
+                        if datastore.get(s + 'unique_id') in user_unique_id_set:
+                            for item in ext_search_list:
+                                item_list=[]
+                                item_list.append(datastore.get(s + str(item)))
+                                while("[]" in item_list):
+                                    item_list.remove("[]")
+                                item_p=(str(item.replace('_',' ')))
+                                print('\n' + item_p.capitalize() +': ')
+                                if item == 'unique_id_modify_time' or item == 'download_prompt_ts' and item_list != [0] :
+                                    print(*item_list)
+                                    print(datetime.datetime.fromtimestamp(int(*item_list)).strftime('%d-%m-%Y %H:%M:%S'))
+                                else:
+                                    print(*item_list)
 
-    print('Signature:')
-    user_signature_set=set(user_signature)
-    user_signature_set=(list(filter(None,user_signature_set)))
-    print(*user_signature_set)
-    print('\n')
+    print('\n..............................................................................................................')
 
-    print('Signature language: ')
-    user_signature_language_set=set(user_signature_language)
-    user_signature_language_set=(list(filter(None,user_signature_language_set)))
-    print(*user_signature_language_set)
-    print('\n')
+    #find/extract/print videos list
+    print('\n** List of videos seen while browsing:\n')
+    for elem in listOfFiles:
+        if elem.endswith('.json'):
+            with open(elem, encoding='utf-8-sig') as f:
+                datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('extra_now') is not None and datastore.get('extra_now') < extra_now_bingo:
+                    for x in range(20):                      
+                        s=('aweme_list_'+ str(x) +'_')
+                        authvid = datastore.get(s + 'author_unique_id')
+                        if authvid in user_unique_id:
+                            for item in video_search_list:
+                                item_list=[]
+                                item_list_vid = (datastore.get(s + item))
+                                item_p=(str(item.replace('_',' ')))
+                                if item_list_vid == None:
+                                    continue
+                                else:
+                                    if item == 'aweme_id':
+                                        print()
+                                        print('Video ID: ')
+                                    elif item == 'desc':
+                                        print()
+                                        print('Video description: ')
+                                    elif item =='statistics_digg_count':
+                                        print()
+                                        print('Number of "diggs": ')
+                                    elif item =='music_play_url_url_list_0':
+                                        print()
+                                        print('Video music/sound: ')
+                                    elif item == 'statistics_comment_count':
+                                        print()
+                                        print('Number of comments: ')
+                                    elif item == 'statistics_download_count':
+                                        print()
+                                        print('Number of downloads: ')
+                                    elif item == 'statistics_play_count':
+                                        print()
+                                        print('Number of time video was played: ')
+                                    elif item == 'statistics_whatsapp_share_count':
+                                        print()
+                                        print('Number of times video was shared on WhatsApp: ')
+                                    elif item == 'video_play_addr_url_list_0':
+                                        print()
+                                        print('URL for video without watermarks (stickers still present): ')
+                                    elif item == 'video_download_addr_url_list_0':
+                                        print()
+                                        print('URL for full video: ')
+                                    else:
+                                        print('\n' + item_p.capitalize() +': ')
+                                    if item == 'create_time' and item_list_vid != [0] :
+                                        print(item_list_vid)
+                                        print(datetime.datetime.fromtimestamp(int(item_list_vid)).strftime('%d-%m-%Y %H:%M:%S'))
+                                    else:
+                                        print(item_list_vid)
+                                    print('.')
+                                    if item == ('video_download_addr_url_list_0'):
+                                        print('******************************')
 
-    print('Birthday: ')
-    user_birthday_set=set(user_birthday)
-    user_birthday_set=(list(filter(None,user_birthday_set)))
-    print(*user_birthday_set)
-    print('\n')
+    print('\n..............................................................................................................')
 
-    print('Region:')
-    aweme_list_0_author_region_set=set(aweme_list_0_author_region)
-    aweme_list_0_author_region_set=(list(filter(None,aweme_list_0_author_region_set)))
-    print(*aweme_list_0_author_region_set)
-    print('\n')
+    #find/extract/print following
+    print('\n** List of following (nickname, unique ID and UID) seen while browsing:\n')
+    for elem in listOfFiles:
+        item_list_n=[]
+        item_list_uni=[]
+        item_list_uid=[]
+        if elem.endswith('.json'):
+            with open(elem, encoding='utf-8-sig') as f:
+                datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('extra_now') is not None and datastore.get('extra_now') < extra_now_bingo:
+                    for x in range(20):
+                        s=('followings_'+ str(x) +'_')
+                        item_list_n = (datastore.get(s + 'nickname'))
+                        item_list_uni = (datastore.get(s + 'unique_id'))
+                        item_list_uid = (datastore.get(s + 'uid'))
 
-    print("Gender: ")
-    user_gender_set=set(user_gender)
-    user_gender_set=(list(filter(None,user_gender_set)))
-    print(*user_gender_set)
-    print('\n')
+                        if item_list_n == None:
+                            continue
+                        else:
+                            print(item_list_n)
+                            print(item_list_uni)
+                            print(item_list_uid)
+                            print('.')
 
-    print('Large Avatar Picture URL: ')
-    user_avatar_larger_url_list_0_set=set(user_avatar_larger_url_list_0)
-    user_avatar_larger_url_list_0_set=(list(filter(None,user_avatar_larger_url_list_0_set)))
-    print(*user_avatar_larger_url_list_0_set)
-    print('\n')
+    print('\n..............................................................................................................')
 
-    print('____________________________________________________________________','\n''** EXTENDED INFORMATION **','\n' )
-    print('YouTube Channel: ')
-    user_youtube_channel_title_set=set(user_youtube_channel_title)
-    user_youtube_channel_title_set=(list(filter(None,user_youtube_channel_title_set)))
-    print(*user_youtube_channel_title_set)
-    print('\n')
-
-    print('YouTube Channel ID:')
-    user_youtube_channel_id_set=set(user_youtube_channel_id)
-    user_youtube_channel_id_set=(list(filter(None,user_youtube_channel_id_set)))
-    print(*user_youtube_channel_id_set)
-    print('\n')
-
-    print('Instagram ID: ')
-    user_ins_id_set=set(user_ins_id)
-    user_ins_id_set=(list(filter(None,user_ins_id_set)))
-    print(*user_ins_id_set)
-    print('\n')
-
-    print('Twitter Name:')
-    user_twitter_name_set=set(user_twitter_name)
-    user_twitter_name_set=(list(filter(None,user_twitter_name_set)))
-    print(*user_twitter_name_set)
-    print('\n')
-
-    print('Twitter ID: ')
-    user_twitter_id_set=set(user_twitter_id)
-    user_twitter_id_set=(list(filter(None,user_twitter_id_set)))
-    print(*user_twitter_id_set)
-    print('\n')
-
-    print('____________________________________________________________________','\n''** VIDEOS **','\n' )
-    print('Number of videos: ')
-    user_aweme_count_set=set(user_aweme_count)
-    user_aweme_count_set=(list(filter(None,user_aweme_count_set)))
-    print(*user_aweme_count_set)
-    print('\n')
-
-    print('____________________________________________________________________','\n''** INTERACTIONS **','\n')
-
-    print('Number of followers:')
-    user_follower_count_set=set(user_follower_count)
-    user_follower_count_set=(list(filter(None,user_follower_count_set)))
-    print(*user_follower_count_set)
-    print('\n')
-
-    print("User following: ")
-    user_following_count_set=set(user_following_count)
-    user_following_count_set=(list(filter(None,user_following_count_set)))
-    print(*user_following_count_set)
-    print('\n')
-
-    print('Favorited: ')
-    user_total_favorited_set=set(user_total_favorited)
-    user_total_favorited_set=(list(filter(None,user_total_favorited_set)))
-    print(*user_total_favorited_set)
-    print('\n')
-
-    print('____________________________________________________________________', '\n' '** NICKNAME OF FOLLOWERS SEEN WHILE BROWSING **', '\n')
-    followersALL_set=set(followersALL)
-    followersALL_set=(list(filter(None,followersALL_set)))
-    for item in followersALL_set:
-        print(item)
-
-    print('____________________________________________________________________', '\n' '** NICKNAME OF FOLLOWINGS SEEN WHILE BROWSING **', '\n')
-    followingsALL_set=set(followingsALL)
-    followingsALL_set=(list(filter(None,followingsALL_set)))
-    for item in followingsALL_set:
-        print(item)
-
-    print('\n')
-    print('--- END ---------------------------')
-    print('\n')
+    #find/extract/print followers
+    print('\n** List of followers (nickname, unique ID and UID) seen while browsing:\n')
+    for elem in listOfFiles:
+        item_list_n=[]
+        item_list_uni=[]
+        item_list_uid=[]
+        if elem.endswith('.json'):
+            with open(elem, encoding='utf-8-sig') as f:
+                datastore=flatten_json.flatten(json.load(f))
+                if datastore.get('extra_now') is not None and datastore.get('extra_now') < extra_now_bingo:
+                    for x in range(20):
+                        s=('followers_'+ str(x) +'_')
+                        item_list_n = (datastore.get(s + 'nickname'))
+                        item_list_uni = (datastore.get(s + 'unique_id'))
+                        item_list_uid = (datastore.get(s + 'uid'))
+                        if item_list_n == None:
+                            continue
+                        else:
+                            print(item_list_n)
+                            print(item_list_uni)
+                            print(item_list_uid)
+                            print('.')
+    print('\n..............................................................................................................')
+    print('Done @ ' + str(datetime.datetime.now()))
+    print()
 
 def getListOfFiles(dirName):
-    # create a list of file and sub directories 
-    # names in the given directory 
+    # create a list of files and sub directories names in the given directory 
     listOfFile = os.listdir(dirName)
     allFiles = list()
     # Iterate over all the entries
