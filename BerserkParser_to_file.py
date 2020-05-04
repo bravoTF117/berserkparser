@@ -201,7 +201,7 @@ def main():
     outfile.write('\n..............................................................................................................')
 
     #find/extract/outfile.write following
-    outfile.write('\n** LIST OF FOLLOWING SEEN WHILE BROWSING\n\n')
+    outfile.write('\n** LIST OF FOLLOWING SEEN WHILE BROWSING (nickname, unique ID, UID):\n\n')
     for elem in listOfFiles:
         item_list_n=[]
         item_list_uni=[]
@@ -230,7 +230,7 @@ def main():
     outfile.write('\n..............................................................................................................')
 
     #find/extract/print followers
-    outfile.write('\n** LIST OF FOLLOWERS AS SEEN BROWSING: \n\n')
+    outfile.write('\n** LIST OF FOLLOWERS AS SEEN WHILE BROWSING (nickname, unique ID, UID): \n\n')
     for elem in listOfFiles:
         item_list_n=[]
         item_list_uni=[]
