@@ -46,3 +46,130 @@ Paste the directory path you copied before (or type it) and hit enter. The scrip
 
 
 _The scripts have to deal with the fact that it is very complex to determine which files contain relevant information. I chose to use a timestamp present in most of the JSON files (extra_nom). The script find the files with the smallest timestamp and the higher timestamp. Then it will find the file that contains the information about the profile the target is following. Everything collected before is basic/video information. Everything collected after is extended information_
+
+
+Example of information collected:
+```
+--- START ---------------------------
+** BASIC INFORMATION **
+
+User unique id: 
+
+User nickname: 
+
+User uid: 
+
+Short ID: 
+
+User birthday: 
+
+User city: 
+
+User province: 
+
+User location: 
+
+Author Region: 
+
+User gender: 
+
+User signature: 
+
+User signature language: 
+
+Author Language: 
+
+Larger Avatar URL: 
+
+Video Icon URL: 
+
+Number of videos: 
+
+Instagram ID: 
+
+User twitter id: 
+
+User twitter name: 
+
+User youtube channel id: 
+
+User youtube channel title: 
+
+User apple account: 
+
+User follower count: 
+
+User following count: 
+
+User total favorited: 
+
+..............................................................................................................
+** EXTENDED INFORMATION FOUND IN METADATA (target as following): 
+
+Language: 
+
+Unique id modify time: 
+
+Download prompt ts: 
+
+Region: 
+
+Region of residence: 
+
+Bind phone: 
+
+Has email: 
+
+School name: 
+
+Google account: 
+
+Weibo name: 
+
+..............................................................................................................
+** LIST OF VIDEOS SEEN WHILE BROWSING:
+
+Video ID: 
+
+Create time: 
+
+Video description: 
+
+Video music/sound: 
+
+Number of comments: 
+
+Number of "diggs":
+
+Number of downloads: 
+
+Number of time video was played: 
+
+Statistics share count: 
+
+Number of times video was shared on WhatsApp: 
+
+URL for video without watermarks (stickers still present): 
+
+URL for full video: 
+
+..............................................................................................................
+** LIST OF FOLLOWING SEEN WHILE BROWSING:
+
+Nickname
+Unique ID
+UID
+
+..............................................................................................................
+** LIST OF FOLLOWERS AS SEEN BROWSING: 
+
+Nickname
+Unique ID
+UID
+
+..............................................................................................................
+Done @ 
+
+ BerserkParser by BTF117
+--- END --------------------------- 
+```
