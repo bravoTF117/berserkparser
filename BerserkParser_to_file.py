@@ -4,8 +4,7 @@ import flatten_json
 import datetime
 import codecs
 
-#allNames = input('\nEnter the directory you want to parse: ')
-dirName = 'c:/users/jb/desktop/1'
+allNames = input('\nEnter the directory you want to parse: ')
 
 # Get the list of all the files in directory at given path
 listOfFiles = list()
